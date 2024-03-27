@@ -1,0 +1,52 @@
+*&---------------------------------------------------------------------*
+*& Report ZPVMUSAI_BLOG_VV31
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zpvmusai_blog_vv31.
+
+INCLUDE zpvmusai_blog_vv31_f01.
+
+PARAMETERS:
+  p_kschl TYPE kschl OBLIGATORY,
+  p_bp    TYPE kunnr OBLIGATORY,
+  p_vkorg TYPE vkorg OBLIGATORY,
+  p_parvw TYPE parvw OBLIGATORY,
+
+  p_email TYPE adr6-smtp_addr OBLIGATORY.
+
+
+AT SELECTION-SCREEN .
+
+  "Validtae provided output type for billing application, output condition usage
+  SELECT SINGLE kvewe, kappl, kschl FROM t685 INTO @DATA(ls_t685)
+    WHERE kvewe = 'B' "Condition usage is- output
+    AND kappl = 'V3' "as our app is limited to Billing applications
+    AND kschl = @p_kschl  .
+  IF sy-subrc <> 0  .
+    MESSAGE 'Invalid output type' TYPE 'E'  .
+  ENDIF.
+
+  "Validate customer and sales organization combination
+  SELECT SINGLE kunnr, vkorg FROM knvv INTO @DATA(ls_knvv) WHERE kunnr = @p_bp AND vkorg = @p_vkorg .
+  IF sy-subrc <> 0 .
+    MESSAGE 'Invalid Customer/ Sales Organization' TYPE 'E' .
+  ENDIF.
+
+  "Validate inputted Customer/ Business partner and partner function
+  SELECT SINGLE parvw FROM tpar INTO @DATA(ls_tpar) WHERE  parvw = @p_parvw .
+  IF sy-subrc <> 0 .
+    MESSAGE 'Invalid Partner function' TYPE 'E' .
+  ENDIF.
+
+START-OF-SELECTION  .
+
+  DATA: lo_billing_cond TYPE REF TO lcl_zvv31_recipient_email .
+
+  lo_billing_cond->create_update_recipient_email(
+    iv_customer         = p_bp
+    iv_sales_org        = p_vkorg
+    iv_output_type      = p_kschl
+    iv_recipient_email  = p_email
+    iv_partner_function = p_parvw
+  ).

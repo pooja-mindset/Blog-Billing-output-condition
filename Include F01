@@ -89,7 +89,6 @@ ENDCLASS  .
 
 CLASS lcl_zvv31_recipient_email IMPLEMENTATION  .
 
-
   METHOD create_cond_rec_with_recipent  .
     DATA: ls_sap_doc_obj_key TYPE gty_sofm_object_key,
           ls_somg_rcp_key    TYPE somgk,
@@ -475,8 +474,6 @@ CLASS lcl_zvv31_recipient_email IMPLEMENTATION  .
     <lfs_db_time_vake>-knumh = lv_knumh.   "'0000609835'.
 
 
-
-
     <lfs_xnach_db>-mandt = sy-mandt.
     <lfs_xnach_db>-knumh = lv_knumh.
     <lfs_xnach_db>-ernam = sy-uname.
@@ -503,7 +500,6 @@ CLASS lcl_zvv31_recipient_email IMPLEMENTATION  .
     <lfs_xnach_db>-tdarmod = 3 .
 
     <lfs_xnach_db>-skips = abap_true .
-
 
 
     CALL FUNCTION 'NACHRICHTEN_SICHERN_V13B'
@@ -558,7 +554,7 @@ CLASS lcl_zvv31_recipient_email IMPLEMENTATION  .
 
 *   "Get existing NACH details to update
     SELECT SINGLE knumh, kvewe, kotabnr, kappl, kschl,
-*      vakey ,
+      vakey ,
       parvw, parnr, nacha, anzal, vsztp, aende, objpri, tdarmod
       FROM nach INTO @DATA(ls_existing_nach)
       WHERE knumh = @iv_knumh .
@@ -739,8 +735,7 @@ CLASS lcl_zvv31_recipient_email IMPLEMENTATION  .
         vakey  TYPE char100,
       END OF lty_nach .
 
-    DATA: lt_apps_range  TYPE RANGE OF kappl,
-          lt_somg_inputs TYPE STANDARD TABLE OF lty_somg_inputs,
+    DATA: lt_somg_inputs TYPE STANDARD TABLE OF lty_somg_inputs,
           lt_adcp_input  TYPE STANDARD TABLE OF lty_adcp_input,
           lt_nach        TYPE STANDARD TABLE OF lty_nach.
 
@@ -753,12 +748,12 @@ CLASS lcl_zvv31_recipient_email IMPLEMENTATION  .
       WHERE kunnr IN @it_kunnr_range AND vkorg = @iv_sales_org .
 
 
-    SELECT knumh, kschl, tdname", vakey
+    SELECT knumh, kschl, tdname, vakey
       FROM nach AS nch
       INTO CORRESPONDING FIELDS OF TABLE @lt_nach
-*      FOR ALL ENTRIES IN @lt_vakey
-      WHERE "nch~vakey = @lt_vakey-vakey and
-      kappl IN @lt_apps_range "Billing application
+      FOR ALL ENTRIES IN @lt_vakey
+      WHERE nch~vakey = @lt_vakey-vakey AND
+      kappl = 'V3'         "Billing application
       AND kschl IN @it_output_type_rn .
 
 ************** applicable for Non-HANA system-> Above code for finding the condition record number from NACH table *****
@@ -816,6 +811,7 @@ CLASS lcl_zvv31_recipient_email IMPLEMENTATION  .
         ENDIF.
         CLEAR: lv_tdname, ls_nach .
       ENDLOOP.
+
       IF lt_adcp_input IS NOT INITIAL .
         SORT lt_adcp_input BY so_key  .
         SELECT so_key, a6~smtp_addr AS email
@@ -851,7 +847,6 @@ CLASS lcl_zvv31_recipient_email IMPLEMENTATION  .
       it_kunnr_range    = lt_kunnr_range
       iv_sales_org      = iv_sales_org
     ).
-
 
     READ TABLE lt_bp_existing_emails INTO DATA(ls_bp_existing_email) INDEX 1  .
     IF sy-subrc = 0 .   "If condition record exist
@@ -909,7 +904,6 @@ CLASS lcl_zvv31_recipient_email IMPLEMENTATION  .
     ELSE.
       MESSAGE 'Recipient email update failed' TYPE 'E' .
     ENDIF.
-
 
   ENDMETHOD .
 

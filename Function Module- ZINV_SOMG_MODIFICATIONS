@@ -1,0 +1,28 @@
+FUNCTION zinv_somg_modifications.
+*"----------------------------------------------------------------------
+*"*"Local Interface:
+*"  IMPORTING
+*"     REFERENCE(IS_SOMG_KEY) TYPE  SOMGK OPTIONAL
+*"     REFERENCE(IS_SOMG_DATA) TYPE  SOMGD OPTIONAL
+*"     REFERENCE(IS_SOMG_KEY_DEL) TYPE  SOMGK OPTIONAL
+*"  EXPORTING
+*"     REFERENCE(EV_SUBRC) TYPE  SUBRC
+*"     REFERENCE(EV_DEL_SUBRC) TYPE  SUBRC
+*"----------------------------------------------------------------------
+
+  DATA: lv_subrc TYPE subrc.
+
+  IF is_somg_key_del IS SUPPLIED  .
+    PERFORM somg_delete(sapfsso5) USING is_somg_key_del
+          CHANGING ev_del_subrc .
+    CHECK ev_del_subrc = 0  .
+  ENDIF .
+
+  IF is_somg_key IS SUPPLIED AND is_somg_data IS SUPPLIED  .
+    PERFORM somg_insert(sapfsso5) USING is_somg_key
+                                        is_somg_data
+                               CHANGING ev_subrc  .
+
+  ENDIF .
+
+ENDFUNCTION.

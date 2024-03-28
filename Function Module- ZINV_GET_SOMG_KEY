@@ -1,0 +1,20 @@
+FUNCTION ZINV_GET_SOMG_KEY .
+*"----------------------------------------------------------------------
+*"*"Local Interface:
+*"  IMPORTING
+*"     REFERENCE(IV_SOMG_KEY_OBJTP) TYPE  SOMG-OBJTP
+*"  EXPORTING
+*"     REFERENCE(EV_SUBRC) TYPE  SUBRC
+*"  CHANGING
+*"     REFERENCE(CS_SOMG_KEY) TYPE  SOMGK
+*"----------------------------------------------------------------------
+
+  PERFORM get_external_number(sapfsso2) USING iv_somg_key_objtp
+                               CHANGING cs_somg_key-objno
+                                        cs_somg_key-objyr
+                                        ev_subrc  .
+
+
+
+
+ENDFUNCTION.

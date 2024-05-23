@@ -8,7 +8,9 @@ FUNCTION ZINV_GET_SOMG_KEY .
 *"  CHANGING
 *"     REFERENCE(CS_SOMG_KEY) TYPE  SOMGK
 *"----------------------------------------------------------------------
-
+*"Thi function module calls the standard subroutine provided by SAP in 
+*"include- SAPFSSO2 to to get the SOMG number range latest object number
+*"----------------------------------------------------------------------
   PERFORM get_external_number(sapfsso2) USING iv_somg_key_objtp
                                CHANGING cs_somg_key-objno
                                         cs_somg_key-objyr

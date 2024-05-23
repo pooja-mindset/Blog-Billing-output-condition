@@ -10,7 +10,7 @@ FUNCTION zinv_somg_modifications.
 *"     REFERENCE(EV_DEL_SUBRC) TYPE  SUBRC
 *"----------------------------------------------------------------------
 *"Thi function module calls the standard subroutines provided by SAP in 
-*"include- SAPFSSO5 to utilize the SOM delete and Insert functionality
+*"include- SAPFSSO5 to utilize the SOMG delete and Insert functionality
 *"----------------------------------------------------------------------
   DATA: lv_subrc TYPE subrc.
 

@@ -88,8 +88,9 @@ CLASS lcl_zvv31_recipient_email DEFINITION  .
 ENDCLASS  .
 
 CLASS lcl_zvv31_recipient_email IMPLEMENTATION  .
-
+  
   METHOD create_cond_rec_with_recipent  .
+  "This method will create condition record in VV31, with the SAP office document with recipent email address
     DATA: ls_sap_doc_obj_key TYPE gty_sofm_object_key,
           ls_somg_rcp_key    TYPE somgk,
           ls_somg_rcp_data   TYPE somgd,
@@ -127,7 +128,7 @@ CLASS lcl_zvv31_recipient_email IMPLEMENTATION  .
   ENDMETHOD.
 
   METHOD update_cond_rec_with_recipent  .
-
+    "This method will create the SAP office document with recipient email and update it to the existing codition record
     DATA: ls_sap_doc_obj_key TYPE gty_sofm_object_key,
           ls_somg_rcp_key    TYPE somgk,
           ls_somg_rcp_data   TYPE somgd,
@@ -160,7 +161,7 @@ CLASS lcl_zvv31_recipient_email IMPLEMENTATION  .
   ENDMETHOD .
 
   METHOD create_sap_office_document.
-
+    "This method will create SAP Office document
     DATA: ls_folder_id        TYPE soodk,
           lv_folder_id_api1   TYPE sofoldati1-object_id,
           ls_object_dat_cha   TYPE sodocchgi2,
@@ -293,7 +294,8 @@ CLASS lcl_zvv31_recipient_email IMPLEMENTATION  .
   ENDMETHOD .
 
   METHOD update_rcp_message_obj_email.
-
+    "This method will update the existing SAP Office document with new recipient email (either by deleting old email and updating new one 
+    "or inserting new email if no existing email)
     DATA: ls_somg_rcp_key      TYPE somgk,
           ls_somg_rcp_data     TYPE somgd,
           lv_subrc             TYPE sy-subrc,
@@ -416,7 +418,7 @@ CLASS lcl_zvv31_recipient_email IMPLEMENTATION  .
 
 
   METHOD create_condition_record.
-
+    "This method creates condition record in NACH table
     DATA: l_kschl   TYPE  kschl,
           l_kvewe   TYPE kvewe,
           l_kotabnr TYPE  kotabnr,
@@ -526,7 +528,7 @@ CLASS lcl_zvv31_recipient_email IMPLEMENTATION  .
   ENDMETHOD .
 
   METHOD update_condition_record  .
-
+    "This method updates existing condition record with SAP office document (with recipient email)
     DATA: l_kschl   TYPE  kschl,
           l_kvewe   TYPE kvewe,
           l_kotabnr TYPE  kotabnr,
@@ -596,7 +598,7 @@ CLASS lcl_zvv31_recipient_email IMPLEMENTATION  .
   ENDMETHOD .
 
   METHOD create_email_update_somg_ref.
-
+    "This method creates email object and updates as recipient in SAP office document
     DATA: ls_usage_pers_ref TYPE pers_ref,
           lv_adrnr_so_key   TYPE adcp-so_key.
 
@@ -651,7 +653,7 @@ CLASS lcl_zvv31_recipient_email IMPLEMENTATION  .
   ENDMETHOD.
 
   METHOD create_internet_email_address.
-
+  "This method creates internet email address object
     DATA: lo_bas_ref     TYPE REF TO cl_cam_address_bcs,
           ls_usage_ref   TYPE pers_ref,
           lv_vsi_profile TYPE vscan_profile,
@@ -724,7 +726,7 @@ CLASS lcl_zvv31_recipient_email IMPLEMENTATION  .
   ENDMETHOD.
 
   METHOD get_customer_recipient_email .
-
+    "This method is to get the existing recipient email associated with the business partner
     TYPES:
       BEGIN OF lty_somg_inputs,
         kunnr TYPE kunnr,
@@ -850,7 +852,7 @@ CLASS lcl_zvv31_recipient_email IMPLEMENTATION  .
   ENDMETHOD .
 
   METHOD create_update_recipient_email  .
-
+    "This method is to create or update recipient email for a condition record for a business partner
     DATA: ls_sofm_object_key TYPE gty_sofm_object_key .
 
     DATA(lt_kunnr_range) = VALUE gtt_kunnr_range( ( sign = 'I' option = 'EQ' low = iv_customer ) )  .
